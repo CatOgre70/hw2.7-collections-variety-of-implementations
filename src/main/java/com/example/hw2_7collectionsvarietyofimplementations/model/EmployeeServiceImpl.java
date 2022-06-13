@@ -8,22 +8,20 @@ import java.util.*;
 public class EmployeeServiceImpl implements EmployeeService{
 
     private final Map<String, Employee> employees;
-    IdDatabase idDb;
 
     public EmployeeServiceImpl() {
 
-        idDb = new IdDatabase();
         employees = new HashMap<>();
-        employees.put(idDb.generateNewId(), new Employee("Ivan", "Ivanov"));
-        employees.put(idDb.generateNewId(), new Employee("Petr","Petrov"));
-        employees.put(idDb.generateNewId(), new Employee("Sidor", "Sidorov"));
-        employees.put(idDb.generateNewId(), new Employee("Afanasii", "Ukupnikov"));
-        employees.put(idDb.generateNewId(), new Employee("Maria", "Mariaskina"));
-        employees.put(idDb.generateNewId(), new Employee("Elena", "Fedotova"));
-        employees.put(idDb.generateNewId(), new Employee("Afanasii", "Morozov"));
-        employees.put(idDb.generateNewId(), new Employee("Vasily", "Alibabaev"));
-        employees.put(idDb.generateNewId(), new Employee("Semen", "Gorbunkov"));
-        employees.put(idDb.generateNewId(), new Employee("Svetlana", "Fedotova"));
+        employees.put("IvanIvanov", new Employee("Ivan", "Ivanov"));
+        employees.put("PetrPetrov", new Employee("Petr","Petrov"));
+        employees.put("SidorSidorov", new Employee("Sidor", "Sidorov"));
+        employees.put("AfanasiiUkupnikov", new Employee("Afanasii", "Ukupnikov"));
+        employees.put("MariaMariaskina", new Employee("Maria", "Mariaskina"));
+        employees.put("ElenaFedotova", new Employee("Elena", "Fedotova"));
+        employees.put("AfanasiiMorozov", new Employee("Afanasii", "Morozov"));
+        employees.put("VasilyAlibabaev", new Employee("Vasily", "Alibabaev"));
+        employees.put("SemenGorbunkov", new Employee("Semen", "Gorbunkov"));
+        employees.put("SvetlanaFedotova", new Employee("Svetlana", "Fedotova"));
 
     }
 
@@ -32,35 +30,34 @@ public class EmployeeServiceImpl implements EmployeeService{
     public Employee addEmployee(String firstName, String lastName) {
 
         Employee e = new Employee(firstName, lastName);
-        if(employees.containsValue(e))
+        String key = e.getKey();
+        if(employees.containsKey(key))
             throw new EmployeeAlreadyAddedException("Employee is already added into the database!");
-        employees.put(idDb.generateNewId(), e);
-        return e;
+        employees.put(key, e);
+        return employees.get(key);
     }
 
     @Override
     public Employee removeEmployee(String firstName, String lastName) {
         Employee e = new Employee(firstName, lastName);
-        Set<Map.Entry<String, Employee>> pairSet = employees.entrySet();
-        for(Map.Entry<String, Employee> pair : pairSet) {
-            if (e.equals(pair.getValue())){
-                    employees.remove(pair.getKey());
-                    return e;
-            }
+        String key = e.getKey();
+        if(employees.containsKey(key)){
+            employees.remove(key);
+            return e;
+        } else {
+            throw new EmployeeNotFoundException("Employee is not found in the database");
         }
-        throw new EmployeeNotFoundException("Employee is not found in the database");
     }
 
     @Override
     public Employee findEmployee(String firstName, String lastName) {
         Employee e = new Employee(firstName, lastName);
-        Set<Map.Entry<String, Employee>> pairSet = employees.entrySet();
-        for(Map.Entry<String, Employee> pair : pairSet) {
-            if (e.equals(pair.getValue())){
-                return e;
-            }
+        String key = e.getKey();
+        if(employees.containsKey(key)){
+            return employees.get(key);
+        } else {
+            throw new EmployeeNotFoundException("Employee is not found in the database");
         }
-        throw new EmployeeNotFoundException("Employee is not found in the database");
     }
 
     @Override

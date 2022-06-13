@@ -40,4 +40,8 @@ public class Employee {
     public int hashCode() {
         return Objects.hash(firstName, secondName);
     }
+
+    public String getKey(){
+        return firstName + secondName;
+    }
 }
